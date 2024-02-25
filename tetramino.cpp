@@ -58,10 +58,7 @@ bool Tetramino::giu() {
     }
     return false;
 }
-bool Tetramino::ruota(bool reverse) {
-    if (reverse){
-        rotazione=rotazione+2;
-    }
+bool Tetramino::ruota(){
     rotazione=(rotazione+1)%4;
     if (collisioniBordo()){
         rotazione=(rotazione+3)%4;
