@@ -14,9 +14,12 @@ void Gioco::aggiornaPunteggio(){
 void Gioco::cancellaRiga(){
     //
 }
-bool rigaCompleta(){
+bool Gioco::rigaCompleta(){
     //
 } 
+bool Gioco::sconfitta(){
+    //
+}
 void Gioco::aggiornaStato(){
     bool collisione = !tetramino.giu();
     if(collisioniConTetramini()){
