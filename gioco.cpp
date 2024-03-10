@@ -16,8 +16,7 @@ void Gioco::cancellaRiga(){
 }
 bool rigaCompleta(){
     //
-}
-
+} 
 void Gioco::aggiornaStato(){
     bool collisione = !tetramino.giu();
     if(collisioniConTetramini()){
@@ -40,16 +39,6 @@ void Gioco::aggiornaStato(){
     }
 }
 
-bool  Gioco::collisioniConTetramini(){
-    tetramino.aggiornaTavola();
-    for(int i = 0;i<20;i++){
-        for(int j=0; j<10; j++){
-            if(tavola[i][j] != 0 && tetramino.tavola[i+4]){
-                tavola[i][j] = tetramino.tavola[i+4][j];
-            }
-        }
-    }
-}
 bool Gioco::collisioniConTetramini() {
     tetramino.aggiornaTavola();
     for (int i = 0; i < 20; ++i) {
@@ -61,10 +50,10 @@ bool Gioco::collisioniConTetramini() {
     }
     return false;
 }
-void trasformaTetramino(int k){
+void Gioco::trasformaTetramino(int k){
     switch (k) {
         case KEY_UP:
-            tetramino.ruota();
+            tetramino.ruota(false);
             if (collisioniConTetramini()) tetramino.ruota(true);
             break;
         case KEY_RIGHT:
@@ -77,7 +66,7 @@ void trasformaTetramino(int k){
             break;
         case KEY_DOWN:
             tetramino.ruota(true);
-            if (collisioniConTetramini()) tetramino.ruota();
+            if (collisioniConTetramini()) tetramino.ruota(false);
             break;
     }
 }
