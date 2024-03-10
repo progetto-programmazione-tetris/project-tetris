@@ -6,7 +6,7 @@ using namespace std;
 
 Tetramino::Tetramino() {
     srand(time(NULL));
-    tipo=rand()%6;
+    tipo=rand()%7;
     rotazione=rand()%3;
     aggiornaTavola();
 }

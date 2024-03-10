@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <cstdlib>
 #include "tetramino.h"
 #include "gioco.h"
 void Gioco::disegna(){
@@ -52,6 +53,12 @@ bool Gioco::collisioniConTetramini() {
         }
     }
     return false;
+}
+void Gioco::gravita(){
+    tetramino.giu();
+        if (collisioniConTetramini()){
+            tetramino.su();
+        }
 }
 void Gioco::trasformaTetramino(int k){
     switch (k) {

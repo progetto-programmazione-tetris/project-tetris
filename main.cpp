@@ -10,7 +10,7 @@ int main(int argc, char const *argv[]) {
     noecho();
     curs_set(0);
     keypad(stdscr, TRUE);
-        
+            
     while (true){
         input = getch();
         gioco.trasformaTetramino(input);

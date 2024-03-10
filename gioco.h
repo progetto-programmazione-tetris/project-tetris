@@ -9,6 +9,7 @@ class Gioco{
         void disegna();
         void aggiornaStato();
         void trasformaTetramino(int);
+        void gravita();
     private:
         bool collisioniConTetramini();
         bool sconfitta();
