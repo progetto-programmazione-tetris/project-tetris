@@ -64,7 +64,7 @@ class mainMenu{
                         } else if (choice == 1) {
                             printw("You selected Option 2\n");
                             scoreboardMenu();
-                        } else if (choice == 3) {
+                        } else if (choice == 2) {
                             break;
                         }
                         break;
