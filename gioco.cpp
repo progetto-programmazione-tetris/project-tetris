@@ -4,20 +4,63 @@
 #include "gioco.h"
 void Gioco::disegna(){
     int Disegno;
+
     // finsetra principale
+    WINDOW *campo = newwin(22, 22, 1, 50);
+    refresh();
+    wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
+    for(int y=20-1; y>=0; y--){
+        for(int x=0; x<10; x++){
+            if(tavola[y][x]){
+                mvwprintw(campo, (y+1), (x*2+1), "[]");
+                wrefresh(campo);
+            }
+            else{
+                mvwprintw(campo, (y+1), (x*2+1), "--");
+                wrefresh(campo);
+            }
+        }
+    }
+    wrefresh(campo);
+
     // finestra punteggio
+    mvprintw(5, 5, "punteggio: %d", punteggio);
+
     // finestra che mostra PROSSIMO tetramino
 
 }
-void Gioco::aggiornaPunteggio(){
-    //
+void Gioco::cancellaRiga(int y){
+    while (y > 0) {
+        for (int x = 0; x < 10; x++) {
+            tavola[y][x] = tavola[y - 1][x];
+        }
+        y--;
+    }
+    for (int x = 0; x < 10; x++) {
+        tavola[0][x] = 0;
+    }
 }
-void Gioco::cancellaRiga(){
-    //
+bool Gioco::rigaCompleta(int y){
+    bool piena = true;
+    int x = 0;
+    while (x < 10 && piena) {
+        if (tavola[y][x] == false) {
+            piena = false;
+        }
+        x++;
+    }
+    return piena;
 }
-bool Gioco::rigaCompleta(){
-    //
-} 
+void Gioco::rimozioneRighePiene(){
+    int righe_piene = 0;
+    for (int y = 0; y < 20; y++){
+        if(controlla_riga(y)){
+            righe_piene++;
+            togli_riga(y);
+        }
+    }
+    punteggio = punteggio + righe_piene;
+}
 bool Gioco::sconfitta(){
     //
 }
@@ -37,7 +80,7 @@ void Gioco::aggiornaStato(){
                 }
             }
         }
-        aggiornaPunteggio();
+        rimozioneRighePiene();
         tetramino = prossimoTetramino;
         prossimoTetramino = Tetramino();
     }
