@@ -5,7 +5,6 @@
 void Gioco::disegna(){
     int Disegno;
 
-    // finsetra principale
     WINDOW *campo = newwin(22, 22, 1, 50);
     refresh();
     wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
@@ -23,7 +22,6 @@ void Gioco::disegna(){
     }
     wrefresh(campo);
 
-    // finestra punteggio
     mvprintw(5, 5, "punteggio: %d", punteggio);
 
     // finestra che mostra PROSSIMO tetramino
