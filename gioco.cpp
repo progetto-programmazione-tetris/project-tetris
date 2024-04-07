@@ -5,21 +5,17 @@
 void Gioco::disegna(){
     int Disegno;
 
+    tetramino.aggiornaTavola();
     WINDOW *campo = newwin(22, 22, 1, 50);
-    refresh();
+    start_color();
     wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
     for(int y=20-1; y>=0; y--){
         for(int x=0; x<10; x++){
-            if(tavola[y][x]){
-                mvwprintw(campo, (y+1), (x*2+1), "[]");
-                wrefresh(campo);
-            }
-            else{
-                mvwprintw(campo, (y+1), (x*2+1), "--");
-                wrefresh(campo);
-            }
-        }
-    }
+            Disegno = tavola[y][x] + tetramino.tavola[i+4][j];
+                wattron(campo, COLOR_PAIR(Disegno));
+                mvwprintw(campo, (y+1), (x*2+1), "  ");
+                wattroff(campo, COLOR_PAIR(Disegno));
+
     wrefresh(campo);
 
     mvprintw(5, 5, "punteggio: %d", punteggio);
