@@ -15,7 +15,8 @@ void Gioco::disegna(){
                 wattron(campo, COLOR_PAIR(Disegno));
                 mvwprintw(campo, (y+1), (x*2+1), "  ");
                 wattroff(campo, COLOR_PAIR(Disegno));
-
+        }
+    }
     wrefresh(campo);
 
     mvprintw(5, 5, "punteggio: %d", punteggio);
