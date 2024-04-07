@@ -6,6 +6,7 @@
 class Gioco{
     public:
         Gioco():tetramino(){};
+        Gioco():menu(){};
         void disegna();
         void rimozioneRighePiene();
         void aggiornaStato();
