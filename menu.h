@@ -1,5 +1,6 @@
 #ifndef MENU_H
 #define MENU_H
+#include <ncurses.h>
 #include <cstring>
 #include <fstream>
 using namespace std;
