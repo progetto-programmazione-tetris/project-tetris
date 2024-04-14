@@ -12,10 +12,9 @@ Tetramino::Tetramino() {
 }
 
 void Tetramino::aggiornaTavola() {
-    for (int i = 0; i < 20 + 4; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            if (i - y < 4 && i - y >= 0 &&
-                j - x < 4 && j - x >= 0) {
+    for (int i = 0; i < 20 + 4; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (((i - y < 4) && (i - y >= 0)) && ((j - x < 4) && (j - x >= 0))) {
                 tavola[i][j] = tetramini[tipo][rotazione][i - y][j - x];
             } else {
                 tavola[i][j] = 0;
@@ -26,8 +25,8 @@ void Tetramino::aggiornaTavola() {
 bool Tetramino::collisioniBordo() {
     aggiornaTavola();
     int blocco=0;
-    for (int i = 0; i < 20 + 4; ++i) {
-        for (int j = 0; j < 10; ++j) {
+    for (int i = 0; i < 20 + 4; i++) {
+        for (int j = 0; j < 10; j++) {
             if (tavola[i][j] != 0) blocco += 1;
         }
     }

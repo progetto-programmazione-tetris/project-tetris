@@ -9,7 +9,7 @@ class Tetramino{
         bool sinistra();
         bool giu();
         bool su();
-        bool ruota(bool);
+        bool ruota(bool=false);
         int tavola[24][10]={};
     private:
         int y=1;

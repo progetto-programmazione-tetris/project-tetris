@@ -4,6 +4,7 @@
 #include "gioco.h"
 #include "menu.h"
 #include <unistd.h>
+
 void Gioco::disegna(){
     int Disegno;
 
@@ -12,8 +13,8 @@ void Gioco::disegna(){
     WINDOW *campo = newwin(22, 22, 1, 50);
     start_color();
     wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
-    for(int y=20-1; y>=0; y--){
-        for(int x=0; x<10; x++){
+    for(int y=0; y<20; y++){
+        for(int x = 0; x < 10; x++){
             Disegno = tavola[y][x] + tetramino.tavola[y+4][x];
                 wattron(campo, COLOR_PAIR(Disegno));
                 mvwprintw(campo, (y+1), (x*2+1), "  ");
@@ -99,7 +100,7 @@ void Gioco::gravita(){
     if (collisioniConTetramini()){
         tetramino.su();
     }
-    usleep(1000000);
+    //usleep(1000000);
 }
 void Gioco::trasformaTetramino(int k){
     switch (k) {
