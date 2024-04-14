@@ -1,12 +1,12 @@
 #include "tetramino.h"
-#include "classifica.h"
-#ifndef GAME_H
-#define GAME_H
+#include "menu.h"
+
+#ifndef GIOCO_H
+#define GIOCO_H
 
 class Gioco{
     public:
         Gioco():tetramino(){};
-        Gioco():menu(){};
         void disegna();
         void rimozioneRighePiene();
         void aggiornaStato();

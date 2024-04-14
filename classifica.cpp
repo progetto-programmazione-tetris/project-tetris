@@ -22,7 +22,7 @@ bool Classifica::controllo_file(){
             int y = 1;
             while (linea[x + y] != ';'){
                 if (linea[x + y] == '\0') return false;
-                if (y > 15) return false;
+                if (y > 15)     return false;
                 y++;
             }
         }

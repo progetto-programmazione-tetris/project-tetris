@@ -2,28 +2,29 @@
 #include <cstdlib>
 #include "tetramino.h"
 #include "gioco.h"
+#include "menu.h"
+#include <unistd.h>
 void Gioco::disegna(){
     int Disegno;
 
+    // finsetra principale
     tetramino.aggiornaTavola();
     WINDOW *campo = newwin(22, 22, 1, 50);
     start_color();
     wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
     for(int y=20-1; y>=0; y--){
         for(int x=0; x<10; x++){
-            Disegno = tavola[y][x] + tetramino.tavola[i+4][j];
+            Disegno = tavola[y][x] + tetramino.tavola[y+4][x];
                 wattron(campo, COLOR_PAIR(Disegno));
                 mvwprintw(campo, (y+1), (x*2+1), "  ");
                 wattroff(campo, COLOR_PAIR(Disegno));
         }
     }
     wrefresh(campo);
-
+    // finestra punteggio
     mvprintw(5, 5, "punteggio: %d", punteggio);
-
-    // finestra che mostra PROSSIMO tetramino
-
 }
+
 void Gioco::cancellaRiga(int y){
     while (y > 0) {
         for (int x = 0; x < 10; x++) {
@@ -49,15 +50,16 @@ bool Gioco::rigaCompleta(int y){
 void Gioco::rimozioneRighePiene(){
     int righe_piene = 0;
     for (int y = 0; y < 20; y++){
-        if(controlla_riga(y)){
+        if(rigaCompleta(y)){
             righe_piene++;
-            togli_riga(y);
+            cancellaRiga(y);
         }
     }
     punteggio = punteggio + righe_piene;
 }
 bool Gioco::sconfitta(){
     //
+    return false;
 }
 void Gioco::aggiornaStato(){
     bool collisione = !tetramino.giu();
@@ -94,9 +96,10 @@ bool Gioco::collisioniConTetramini() {
 }
 void Gioco::gravita(){
     tetramino.giu();
-        if (collisioniConTetramini()){
-            tetramino.su();
-        }
+    if (collisioniConTetramini()){
+        tetramino.su();
+    }
+    usleep(1000000);
 }
 void Gioco::trasformaTetramino(int k){
     switch (k) {

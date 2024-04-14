@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp tetromino.cpp gioco.cpp -lncurses -o tetris
+	g++ main.cpp tetramino.cpp gioco.cpp menu.cpp classifica.cpp -lncurses -o tetris
