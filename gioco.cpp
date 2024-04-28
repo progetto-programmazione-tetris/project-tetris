@@ -74,7 +74,7 @@ void Gioco::aggiornaStato(){
         for(int i=0; i<20; i++){
             for(int j=0; j<10;j++){
                 if (tavola[i][j]==0){
-                    tavola[i][j]==tetramino.tavola[i+4][j];
+                    tavola[i][j]=tetramino.tavola[i+4][j];
                 }
             }
         }
