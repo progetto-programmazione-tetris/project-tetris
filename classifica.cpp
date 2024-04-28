@@ -1,3 +1,4 @@
+#include <ncurses.h>
 #include "classifica.h"
 
 bool Classifica::controllo_file(){

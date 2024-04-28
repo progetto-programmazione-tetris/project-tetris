@@ -50,9 +50,9 @@ bool Tetramino::sinistra() {
     return true;
 }
 bool Tetramino::giu() {
-    y=y-1;
+    y=y+1;
     if (collisioniBordo()){
-        y=y+1;
+        y=y-1;
         return false;
     }
     return true;

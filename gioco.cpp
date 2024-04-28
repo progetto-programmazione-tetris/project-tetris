@@ -56,11 +56,7 @@ void Gioco::rimozioneRighePiene(){
             cancellaRiga(y);
         }
     }
-    punteggio = punteggio + righe_piene;
-}
-bool Gioco::sconfitta(){
-    //
-    return false;
+    punteggio = punteggio + (righe_piene*100);
 }
 void Gioco::aggiornaStato(){
     bool collisione = !tetramino.giu();
@@ -95,11 +91,22 @@ bool Gioco::collisioniConTetramini() {
     }
     return false;
 }
+
+bool Gioco::sconfitta(){
+    tetramino.aggiornaTavola();
+    for (int j = 0; j < 10; ++j) {
+        if (tavola[19][j] != 0 && tetramino.tavola[3][j] != 0) {
+            return true; 
+        }
+    }
+    return false;
+}
 void Gioco::gravita(){
     tetramino.giu();
     if (collisioniConTetramini()){
         tetramino.su();
     }
+    refresh();
     //usleep(1000000);
 }
 void Gioco::trasformaTetramino(int k){

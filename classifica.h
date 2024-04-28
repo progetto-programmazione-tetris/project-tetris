@@ -2,7 +2,6 @@
 #define CLASSE_CLASSIFICA_CLASSIFICA_H
 #include <fstream>
 #include <cstring>
-#include "ncurses.h"
 using namespace std;
 
 struct nodo {
