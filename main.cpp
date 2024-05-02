@@ -8,12 +8,14 @@ int main(int argc, char const *argv[]) {
     Gioco gioco;
     initscr();
     start_color();
+
     cbreak(); // Enable cbreak mode (recommended with nodelay)
     nodelay(stdscr, TRUE); // Set nodelay mode for stdscr window
 
-    for (int i = 1; i < 8; ++i) 
+    for (int i = 1; i < 8; ++i){
         init_pair(i, 0, i);
-
+    }
+    
     noecho();
     curs_set(0);
     keypad(stdscr, TRUE);
@@ -34,7 +36,6 @@ int main(int argc, char const *argv[]) {
             tm* now = localtime(&t);
             prev = now->tm_sec;
         }
-
         time_t t = time(nullptr);
     
         tm* now = localtime(&t);
