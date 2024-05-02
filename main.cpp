@@ -1,7 +1,4 @@
 #include <ncurses.h>
-#include <chrono>
-#include <thread>
-
 #include "gioco.h"
 #include "menu.h"
 #include <ctime>
