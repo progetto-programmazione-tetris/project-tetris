@@ -11,6 +11,8 @@ int main(int argc, char const *argv[]) {
     Gioco gioco;
     initscr();
     start_color();
+    cbreak(); // Enable cbreak mode (recommended with nodelay)
+    nodelay(stdscr, TRUE); // Set nodelay mode for stdscr window
 
     for (int i = 1; i < 8; ++i) 
         init_pair(i, 0, i);
@@ -42,6 +44,7 @@ int main(int argc, char const *argv[]) {
         curr = now->tm_sec;
         if (curr != prev){
             gioco.gravita();
+            gioco.disegna();
             gioco.aggiornaStato();
             prev = curr;
         }
