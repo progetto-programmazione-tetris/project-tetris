@@ -2,6 +2,8 @@
 #define CLASSE_CLASSIFICA_CLASSIFICA_H
 #include <fstream>
 #include <cstring>
+#include <ncurses.h>
+
 using namespace std;
 
 struct nodo {
@@ -32,6 +34,7 @@ public:
     void finestra_classifica();
     void aggiungi_punteggio(char nome[], int punteggio);
     void richiesta_nome(char input[]);
+    bool stampa_facciata(WINDOW* win, int indice_partenza, int yMax);
 };
 
 #endif

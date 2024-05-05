@@ -1,5 +1,5 @@
-#include <ncurses.h>
 #include "classifica.h"
+
 
 bool Classifica::controllo_file(){
     fstream file;
@@ -54,37 +54,88 @@ void Classifica::ricava_nome_punti(char linea[], char punti[], char nome[]){
     }
 }
 
-void Classifica::finestra_classifica(){
+void Classifica::finestra_classifica() {
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+    WINDOW *win = newwin(yMax, xMax, 0, 0);
+    refresh();
+    curs_set(0);
+    keypad(win, TRUE);
+
+    int indice_inizio = 0;
+    int input;
+
+    bool fine_classifica;
+
+    while (true) {
+        box(win, 0, 0);
+
+        fine_classifica = stampa_facciata(win, indice_inizio, yMax);
+        if (xMax > 55) {
+            mvwprintw(win, 2, xMax - 22, "q per uscire");
+            mvwprintw(win, 4, xMax - 22, "frecce per scorrere");
+        }
+        wrefresh(win);
+
+        input = wgetch(win);
+        if (input == (int)'q') break;
+        if (input == KEY_UP) {
+            if (indice_inizio > 0) {
+                indice_inizio--;
+            }
+        }
+        if (input == KEY_DOWN) {
+            if (!fine_classifica){
+                indice_inizio++;
+            }
+        }
+
+
+        wclear(win);
+    }
+    wclear(win);
+    wrefresh(win);
+}
+
+bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
     clear();
     refresh();
     char linea[64];
     char nome[32];
     char punti[10];
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-    WINDOW *win = newwin(yMax, xMax, 0, 0);
-    refresh();
-    box(win, 0, 0);
-    curs_set(0);
+    bool fine_classifica = false;
+
+
     fstream file;
     file.open (file_classifica,ios::in);
 
     if (file.is_open()) {
         if(controllo_file()) {
             int ind = 0;
-            // scorre il file riga per riga
-            while (!file.eof() && ind < yMax-4) {
-                file.getline(linea, 32);
-                //stampa il nome e il punteggio salvati nella riga
-                if (linea[0] != '\0') {
-                    ricava_nome_punti(linea, punti, nome);
+            int righe_saltate = indice_partenza;
+            int posizione = 1;
+                // scorre il file riga per riga
+                while (!file.eof() && ind < yMax - 4) {
+                    file.getline(linea, 32);
 
-                    mvwprintw(win, ind + 2, 3, "%d >>", ind + 1);
-                    mvwprintw(win, ind + 2, 10, "%s", nome);
-                    mvwprintw(win, ind + 2, 28, "%s", punti);
-                    ind++;
+                    if (righe_saltate <= 0) {
+                        //stampa il nome e il punteggio salvati nella riga
+                        if (linea[0] != '\0') {
+                            ricava_nome_punti(linea, punti, nome);
+                            mvwprintw(win, ind + 2, 3, "%d >>", posizione);
+                            mvwprintw(win, ind + 2, 10, "%s", nome);
+                            mvwprintw(win, ind + 2, 28, "%s", punti);
+                            ind++;
+                        }
+                    }
+                    if (linea[0] != '\0') {
+                        righe_saltate--;
+                        posizione++;
+                    }
                 }
-            }
+                if(file.eof()){
+                    fine_classifica = true;
+                }
         }
         else {
             mvwprintw(win, 2, 2, "file classifica.txt manomesso");
@@ -92,7 +143,7 @@ void Classifica::finestra_classifica(){
         file.close();
     }
     wrefresh(win);
-    wgetch(win);
+    return fine_classifica;
 }
 
 nodo* Classifica::inserisci_coda(nodo* testa, int punti, char nome[]){
