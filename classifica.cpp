@@ -1,6 +1,6 @@
 #include "classifica.h"
 
-
+// Funzione per controllare la validità del contenuto del file
 bool Classifica::controllo_file(){
     fstream file;
     file.open(file_classifica, ios::in);
@@ -11,19 +11,19 @@ bool Classifica::controllo_file(){
         if (linea[0] != '\0') {
             int len = strlen(linea);
             if (len > 26) return false;
-            //controlla che il punteggio non sia troppo lungo e che ci siano solo cifre
+            // Controlla che il punteggio non sia troppo lungo e che ci siano solo cifre
             int x = 0;
             while (linea[x] != ';' ){
-                if (linea[x] == '\0') return false;
-                if (x >= 9) return false;
-                if (linea[x] < '0' || linea[x] > '9') return false;
+                if (linea[x] == '\0') return false;    // Controlla per il delimitatore corretto
+                if (x >= 9) return false;               // Controlla se il punteggio è troppo lungo
+                if (linea[x] < '0' || linea[x] > '9') return false;    // Assicura che il punteggio contenga solo cifre
                 x++;
             }
             // controlla che il nome non sia troppo lungo
             int y = 1;
             while (linea[x + y] != ';'){
-                if (linea[x + y] == '\0') return false;
-                if (y > 15)     return false;
+                if (linea[x + y] == '\0') return false;    // Controlla per il delimitatore corretto
+                if (y > 15)     return false;        // Controlla se il nome è troppo lungo
                 y++;
             }
         }
@@ -32,6 +32,7 @@ bool Classifica::controllo_file(){
     return true;
 }
 
+// Funzione per estrarre nome e punteggio da una linea
 void Classifica::ricava_nome_punti(char linea[], char punti[], char nome[]){
     int x = 0;
     if(linea[0] != '\0') {
@@ -54,6 +55,7 @@ void Classifica::ricava_nome_punti(char linea[], char punti[], char nome[]){
     }
 }
 
+// Funzione per visualizzare la finestra della classifica
 void Classifica::finestra_classifica() {
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -97,6 +99,7 @@ void Classifica::finestra_classifica() {
     wrefresh(win);
 }
 
+// Funzione per stampare il contenuto della classifica nella finestra
 bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
     clear();
     refresh();
@@ -107,10 +110,10 @@ bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
 
 
     fstream file;
-    file.open (file_classifica,ios::in);
+    file.open(file_classifica, ios::in); // Apre il file in modalità lettura
 
     if (file.is_open()) {
-        if(controllo_file()) {
+        if (controllo_file()) { // Controlla se il file è integro
             int ind = 0;
             int righe_saltate = indice_partenza;
             int posizione = 1;
@@ -119,9 +122,9 @@ bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
                     file.getline(linea, 32);
 
                     if (righe_saltate <= 0) {
-                        //stampa il nome e il punteggio salvati nella riga
+                        // Stampa il nome e il punteggio salvati nella riga
                         if (linea[0] != '\0') {
-                            ricava_nome_punti(linea, punti, nome);
+                        ricava_nome_punti(linea, punti, nome); // Estrae i punteggi e i nomi dalla riga
                             mvwprintw(win, ind + 2, 3, "%d >>", posizione);
                             mvwprintw(win, ind + 2, 10, "%s", nome);
                             mvwprintw(win, ind + 2, 28, "%s", punti);
@@ -134,7 +137,7 @@ bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
                     }
                 }
                 if(file.eof()){
-                    fine_classifica = true;
+                fine_classifica = true; // Indica che la fine del file è stata raggiunta
                 }
         }
         else {
@@ -143,9 +146,10 @@ bool Classifica::stampa_facciata(WINDOW* win, int indice_partenza, int yMax){
         file.close();
     }
     wrefresh(win);
-    return fine_classifica;
+    return fine_classifica; // Ritorna true se la fine della classifica è stata raggiunta
 }
 
+// Funzione per inserire un nodo in coda alla lista
 nodo* Classifica::inserisci_coda(nodo* testa, int punti, char nome[]){
     nodo *n = new nodo;
     n->next = nullptr;
@@ -162,6 +166,7 @@ nodo* Classifica::inserisci_coda(nodo* testa, int punti, char nome[]){
     }
 }
 
+// Funzione per creare una lista di punteggi a partire dal file
 nodo* Classifica::crea_lista_punteggi(){
     fstream file;
     file.open (file_classifica,ios::in);
@@ -185,6 +190,7 @@ nodo* Classifica::crea_lista_punteggi(){
     return testa;
 }
 
+// Funzione per aggiungere un nodo in ordine nella lista
 nodo* Classifica::aggiungi_nodo(nodo *testa, char nome[], int punti){
     nodo* n = new nodo;
     n->punteggio = punti;
@@ -214,36 +220,38 @@ nodo* Classifica::aggiungi_nodo(nodo *testa, char nome[], int punti){
     return testa;
 }
 
+// Funzione per riscrivere la classifica nel file
 void Classifica::riscrivi_classifica(nodo *testa){
     fstream file;
     int max_punteggi = 50;
     int count = 0;
-
     file.open(file_classifica, ios::out);
     if(file.is_open()){
+    // Scrive i punteggi dalla lista al file, fino al massimo consentito
         while (testa != nullptr && count < max_punteggi){
             file <<testa->punteggio <<";" <<testa->nome <<";" <<endl;
             testa = testa->next;
             count++;
         }
     }
-    file.close();
+    file.close();         // Chiusura file
 }
 
+// Funzione per aggiungere un punteggio nella classifica
 void Classifica::aggiungi_punteggio(char nome[], int punteggio) {
     if(strlen(nome) <= 16 && punteggio <= 999999999 && punteggio > 0) {
         fstream file;
         file.open(file_classifica);
         if (file.is_open()) {
             file.close();
-            //se il file è manomesso la funzione non fa niente
+            // Se il file è manomesso, la funzione non fa niente
             if (controllo_file()) {
-                nodo *testa = crea_lista_punteggi();
-                testa = aggiungi_nodo(testa, nome, punteggio);
-                riscrivi_classifica(testa);
+                nodo *testa = crea_lista_punteggi();         // Crea una lista di punteggi esistenti
+                testa = aggiungi_nodo(testa, nome, punteggio);         // Aggiunge il nuovo punteggio alla lista
+                riscrivi_classifica(testa);         // Riscrive il file della classifica con la lista aggiornata
             }
         }
-            //se il file non c'è viene creato
+            // Se il file non c'è, viene creato
         else {
             file.open(file_classifica, ios::out);
             file << punteggio << ";" << nome << ";" << endl;
@@ -252,49 +260,51 @@ void Classifica::aggiungi_punteggio(char nome[], int punteggio) {
     }
 }
 
-// stampa la finestra in cui viene richiesto il nome
+// Funzione per richiedere il nome dell'utente tramite una finestra di input
 void Classifica::richiesta_nome(char input[]) {
-    noecho();
+    noecho();         // Disabilita l'eco dei caratteri inseriti
     int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-    WINDOW *win = newwin(yMax, xMax, 0, 0);
-    box(win, 0, 0);
-    keypad(win, true);
-    curs_set(1);
-    input[0] = '\0';
-    int input_getch = 0;
-    int indice_Ar = 0;
-    int inizio_riga_x = 6;
-    int inizio_riga_y = 3;
+    getmaxyx(stdscr, yMax, xMax);        
+    WINDOW *win = newwin(yMax, xMax, 0, 0);      
+    box(win, 0, 0);        
+    keypad(win, true);       
+    curs_set(1);            // Mostra il cursore
+    input[0] = '\0';         // Inizializza l'input con una stringa vuota
+    int input_getch = 0;        
+    int indice_Ar = 0;        
+    int inizio_riga_x = 6;       
+    int inizio_riga_y = 3;       
 
-    mvwprintw(win, inizio_riga_y-1, inizio_riga_x, "inserisci il tuo nome:");
-    wmove(win, inizio_riga_y, inizio_riga_x);
+    // Stampa il messaggio di richiesta del nome
+    mvwprintw(win, inizio_riga_y - 1, inizio_riga_x, "Inserisci il tuo nome:");
+    wmove(win, inizio_riga_y, inizio_riga_x);         // Muove il cursore alla posizione iniziale dell'input
 
-    while(input_getch != 10) {
-        input_getch = wgetch(win);
-        wmove(win, inizio_riga_y, inizio_riga_x+indice_Ar);
+    while (input_getch != 10) {         // Continua a leggere input finché non viene premuto 'Enter' (codice ASCII 10)
+        input_getch = wgetch(win);         // Legge un carattere dalla finestra
+        wmove(win, inizio_riga_y, inizio_riga_x + indice_Ar);         // Muove il cursore alla posizione corrente dell'input
 
-        for(int x = 0; x < 53; x++) {
-
+        // Controlla se l'input corrisponde a un carattere valido dell'alfabeto
+        for (int x = 0; x < 53; x++) {
             if (input_getch == (int)alfabeto[x]) {
-                if(indice_Ar < 15){
-                    input[indice_Ar] = alfabeto[x];
-                    input[indice_Ar+1] = '\0';
-                    mvwprintw(win, inizio_riga_y, inizio_riga_x, "%s", input);
-                    indice_Ar++;
+                if (indice_Ar < 15) {        
+                    input[indice_Ar] = alfabeto[x];         // Aggiunge il carattere all'input
+                    input[indice_Ar + 1] = '\0';         // Termina la stringa
+                    mvwprintw(win, inizio_riga_y, inizio_riga_x, "%s", input);       
+                    indice_Ar++;       
                 }
             }
         }
 
-        if (input_getch == (KEY_BACKSPACE)){
+        // Gestisce il tasto 'Backspace'
+        if (input_getch == (KEY_BACKSPACE)) {
             if (indice_Ar > 0) {
-                indice_Ar--;
+                indice_Ar--; 
             }
-            mvwprintw(win, inizio_riga_y, inizio_riga_x + indice_Ar, " ");
-            wmove(win, inizio_riga_y, inizio_riga_x + indice_Ar);
-            input[indice_Ar] = '\0';
+            mvwprintw(win, inizio_riga_y, inizio_riga_x + indice_Ar, " "); // Cancella l'ultimo carattere inserito
+            wmove(win, inizio_riga_y, inizio_riga_x + indice_Ar); // Muove il cursore alla nuova posizione dell'input
+            input[indice_Ar] = '\0'; // Termina la stringa
         }
-        wrefresh(win);
+        wrefresh(win); // Aggiorna la finestra per riflettere i cambiamenti
     }
-    curs_set(0);
+    curs_set(0); // Nasconde il cursore
 }
