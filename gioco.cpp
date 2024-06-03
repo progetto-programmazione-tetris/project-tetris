@@ -8,11 +8,12 @@
 void Gioco::disegna(){
     int Disegno;
 
-    // finsetra principale
-    tetramino.aggiornaTavola();
-    WINDOW *campo = newwin(22, 22, 1, 50);
-    start_color();
-    wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
+    // Finestra principale
+    tetramino.aggiornaTavola();         // Aggiorna lo stato del tetramino attivo
+    WINDOW *campo = newwin(22, 22, 1, 50);         // Crea una nuova finestra per il campo di gioco
+    start_color(); // Inizializza i colori
+    wborder(campo, int('|'), int('|'), int('='), int('='), int('='), int('='), int('='), int('='));         // Disegna il bordo della finestra
+    // Disegna i tetramini e lo sfondo
     for(int y=0; y<20; y++){
         for(int x = 0; x < 10; x++){
             Disegno = tavola[y][x] + tetramino.tavola[y+4][x];
@@ -22,21 +23,25 @@ void Gioco::disegna(){
         }
     }
     wrefresh(campo);
-    // finestra punteggio
+    // Finestra punteggio
     mvprintw(5, 5, "punteggio: %d", punteggio);
 }
 
 void Gioco::cancellaRiga(int y){
+    // Sposta tutte le righe sopra di una posizione verso il basso
     while (y > 0) {
         for (int x = 0; x < 10; x++) {
             tavola[y][x] = tavola[y - 1][x];
         }
         y--;
     }
+    // Pulisce la prima riga
     for (int x = 0; x < 10; x++) {
         tavola[0][x] = 0;
     }
 }
+
+// Controlla se una riga è completa (senza zeri)
 bool Gioco::rigaCompleta(int y){
     bool piena = true;
     int x = 0;
@@ -48,6 +53,8 @@ bool Gioco::rigaCompleta(int y){
     }
     return piena;
 }
+
+// Conta e rimuove le righe complete, aggiornando il punteggio
 void Gioco::rimozioneRighePiene(){
     int righe_piene = 0;
     for (int y = 0; y < 20; y++){
@@ -58,6 +65,8 @@ void Gioco::rimozioneRighePiene(){
     }
     punteggio = punteggio + (righe_piene*100);
 }
+
+// Aggiorna lo stato del gioco in base alla posizione del tetramino
 void Gioco::aggiornaStato(){
     bool collisione = !tetramino.giu();
     if(collisioniConTetramini()){
@@ -66,7 +75,7 @@ void Gioco::aggiornaStato(){
     }
 
     if(collisione){
-        tetramino.aggiornaTavola();
+        tetramino.aggiornaTavola();     // Aggiunge il tetramino alla tavola
         for(int i=0; i<20; i++){
             for(int j=0; j<10;j++){
                 if (tavola[i][j]==0){
@@ -74,12 +83,13 @@ void Gioco::aggiornaStato(){
                 }
             }
         }
-        rimozioneRighePiene();
-        tetramino = prossimoTetramino;
-        prossimoTetramino = Tetramino();
+        rimozioneRighePiene();     // Rimuove le righe complete
+        tetramino = prossimoTetramino;     // Sostituisce il tetramino attuale con il prossimo
+        prossimoTetramino = Tetramino();     // Genera un nuovo tetramino
     }
 }
 
+// Controlla se ci sono collisioni tra il tetramino attivo e quelli già presenti nella tavola
 bool Gioco::collisioniConTetramini() {
     tetramino.aggiornaTavola();
     for (int i = 0; i < 20; ++i) {
@@ -92,6 +102,7 @@ bool Gioco::collisioniConTetramini() {
     return false;
 }
 
+// Controlla se il gioco è terminato (sconfitta)
 bool Gioco::sconfitta(){
     tetramino.aggiornaTavola();
     for (int j = 0; j < 10; ++j) {
@@ -107,8 +118,9 @@ void Gioco::gravita(){
         tetramino.su();
     }
     refresh();
-    //usleep(1000000);
 }
+
+// Trasforma (ruota o muove) il tetramino in base all'input dell'utente
 void Gioco::trasformaTetramino(int k){
     switch (k) {
         case KEY_UP:
