@@ -5,21 +5,14 @@
 
 int main(int argc, char const *argv[]) {
     int input;
-    Gioco gioco;
-    initscr();
-    start_color();
-
-    cbreak(); // Enable cbreak mode (recommended with nodelay)
-    nodelay(stdscr, TRUE); // Set nodelay mode for stdscr window
-
-    for (int i = 1; i < 8; ++i){
-        init_pair(i, 0, i);
-    }
-    
-    noecho();
-    curs_set(0);
-    keypad(stdscr, TRUE);
-    
+    //Gioco gioco;
+    initscr();        // Inizializza la libreria ncurses
+    noecho();         // Impedisce la visualizzazione dei caratteri digitati dall'utente
+    curs_set(0);      // Nasconde il cursore
+    keypad(stdscr, TRUE); // Abilita l'uso dei tasti funzione (principalmente le frecce)
+    mainMenu menu;
+    menu.Menu();
+    /*
     time_t t = time(nullptr);
     tm* now = localtime(&t);
     int prev = now->tm_sec;
@@ -31,15 +24,44 @@ int main(int argc, char const *argv[]) {
             gioco.trasformaTetramino(input);
             gioco.disegna();
             gioco.aggiornaStato();
-            time_t t = time(nullptr);
-    
-            tm* now = localtime(&t);
-            prev = now->tm_sec;
         }
         time_t t = time(nullptr);
-    
         tm* now = localtime(&t);
         curr = now->tm_sec;
+        
+        if (curr != prev){
+            gioco.gravita();
+            gioco.disegna();
+            gioco.aggiornaStato();
+            prev = curr;
+        }
+    }*/
+    endwin();  
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+/*
+while (choice != 2){
+    mainMenu();
+    if (choice == 0) {
+        Gioco gioco;
+        //partita
+        time_t t = time(nullptr);
+        tm* now = localtime(&t);
+        int prev = now->tm_sec;
+        int curr = now->tm_sec;
+
+        while (true){
+        input = getch();
+        if (input != ERR) { // Check if input is available
+            gioco.trasformaTetramino(input);
+            gioco.disegna();
+            gioco.aggiornaStato();
+        }
+        time_t t = time(nullptr);
+        tm* now = localtime(&t);
+        curr = now->tm_sec;
+        
         if (curr != prev){
             gioco.gravita();
             gioco.disegna();
@@ -47,5 +69,7 @@ int main(int argc, char const *argv[]) {
             prev = curr;
         }
     }
-    endwin();  
-}
+    } else if (choice == 1) {
+        classifica.finestra_classifica();
+    }
+}*/

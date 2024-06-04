@@ -3,167 +3,109 @@
 #include <fstream>
 #include "gioco.h"
 #include "menu.h"
+#include <ctime>
 using namespace std;
 
 void mainMenu::Menu() {
-    clear();
-    refresh();
-    // Get screen dimensions
+    nodelay(stdscr, false); // Imposta la modalità nodelay su false per consentire l'attesa di input dall'utente
+    clear(); // Pulisce lo schermo
+    refresh(); // Aggiorna lo schermo
+    // Ottiene le dimensioni dello schermo
     getmaxyx(stdscr, yMax, xMax);
 
-    // Define menu options
-    const char* options[] = {"New Game", "Scoreboard", "Quit"};
-    int num_options = sizeof(options) / sizeof(options[0]);
+    // Definisce le opzioni del menu
+    const char* opzioni[] = {"New Game", "Scoreboard", "Quit"};
+    int num_opzioni = sizeof(opzioni) / sizeof(opzioni[0]);
 
-    // Current highlighted option
-    int choice = 0;
-    // Is an option been selected
+    // Opzione corrente evidenziata
+    int scelta = 0;
+    // È stata selezionata un'opzione
     bool isSelected = false;
 
     while (isSelected == false) {
         clear();
-        // Print the menu title
+        // Stampa il titolo del menu
         mvprintw(0, (xMax - strlen("TETRIS")) / 2, "TETRIS");
 
-        // Print each option with highlighting
-        for (int i = 0; i < num_options; ++i) {
-            attron(A_BOLD);
-            if (choice == i) {
-                mvprintw(i + 2, (xMax - strlen(options[i]))/2 - 2, "%s" ,">");
-                attron(A_REVERSE);// Highlight the current option
-                mvprintw(i + 2, (xMax - strlen(options[i]))/2, "%s", options[i]);
-                attroff(A_REVERSE);
+        // Stampa ogni opzione con evidenziazione
+        for (int i = 0; i < num_opzioni; ++i) {
+            attron(A_BOLD); // Attiva il grassetto per il testo
+            if (scelta == i) {
+                mvprintw(i + 2, (xMax - strlen(opzioni[i]))/2 - 2, "%s" ,">");
+                attron(A_REVERSE); // Evidenzia l'opzione corrente
+                mvprintw(i + 2, (xMax - strlen(opzioni[i]))/2, "%s", opzioni[i]);
+                attroff(A_REVERSE); // Disattiva l'evidenziazione
             } else {
-                mvprintw(i + 2, (xMax - strlen(options[i]))/2, "%s", options[i]);
+                mvprintw(i + 2, (xMax - strlen(opzioni[i]))/2, "%s", opzioni[i]);
             }
-            attroff(A_BOLD);
+            attroff(A_BOLD); // Disattiva il grassetto
         }
 
         refresh();
 
-        // Get user input (arrow keys)
+        // Ottiene l'input dell'utente (tasti freccia)
         int key = getch();
         switch (key) {
             case KEY_UP:
-                choice = (choice - 1 + num_options) % num_options;
+                scelta = (scelta - 1 + num_opzioni) % num_opzioni;        // Seleziona l'opzione sopra
                 break;
             case KEY_DOWN:
-                choice = (choice + 1) % num_options;
+                scelta = (scelta + 1) % num_opzioni;        // Seleziona l'opzione sotto
                 break;
-            case 10:  // Enter key
+            case 10:  // Tasto Invio
                 isSelected = true;
-                // Select highlighted option
+                // Seleziona l'opzione evidenziata
                 clear();
-                if (choice == 0) {
-                    printw("You selected Option 1\n");
-                    getch();
-                } else if (choice == 1) {
+                if (scelta == 0) {
+                    // Inizia un nuovo gioco
+                    Gioco gioco;
+                    int input;
+                    start_color();
+                    cbreak(); 
+                    nodelay(stdscr, TRUE); 
+
+                    for (int i = 1; i < 8; ++i){
+                        init_pair(i, 0, i);
+                    }
+                    time_t t = time(nullptr);
+                    tm* now = localtime(&t);
+                    int prev = now->tm_sec;
+                    int curr = now->tm_sec;
+                    
+                    while (!gioco.sconfitta()){
+                        input = getch();
+                        if (input != ERR) { // Check if input is available
+                            gioco.trasformaTetramino(input);
+                            gioco.disegna();
+                            gioco.aggiornaStato();
+                        }
+                        time_t t = time(nullptr);
+                        tm* now = localtime(&t);
+                        curr = now->tm_sec;
+                        
+                        if (curr != prev){
+                            gioco.gravita();
+                            gioco.disegna();
+                            gioco.aggiornaStato();
+                            prev = curr;
+                        }
+                    }
+                    nodelay(stdscr, false);
+                    gioco.gameOver();
+                    char nome[32];
+                    classifica.richiesta_nome(nome);
+                    classifica.aggiungi_punteggio(nome, gioco.punteggio);
+                    Menu();
+                } else if (scelta == 1) {
+                    // Visualizza la classifica
                     classifica.finestra_classifica();
-                } else if (choice == 2) {
+                } else if (scelta == 2) {
+                    // Esce dal programma
                     break;
                 }
                 break;
             default:
                 break;
         }
-
-        // Exit on 'q' key
-                if (key == 'q') {
-                break;
-                }
     }
 }
-/*
-// stampa il menu dei punteggi
-void mainMenu :: scoreboardMenu() {
-    initialize();
-    char linea[64];
-    char nome[32];
-    char punti[10];
-    getmaxyx(stdscr, yMax, xMax);
-    WINDOW *win = newwin(yMax, xMax, 0, 0);
-    refresh();
-    box(win, 0, 0);
-    curs_set(0);
-    fstream file;
-    file.open ("classifica.txt",ios::in);
-
-    if (file.is_open()) {
-        if(controllo_file()) {
-            int ind = 0;
-            // scorre il file riga per riga
-            while (!file.eof() && ind < yMax-4) {
-                file.getline(linea, 32);
-                //stampa il nome e il punteggio salvati nella riga
-                if (linea[0] != '\0') {
-                    ricava_nome_punti(linea, punti, nome);
-
-                    mvwprintw(win, ind + 2, 3, "%d >>", ind + 1);
-                    mvwprintw(win, ind + 2, 10, "%s", nome);
-                    mvwprintw(win, ind + 2, 28, "%s", punti);
-                    ind++;
-                }
-            }
-        }
-        else {
-            mvwprintw(win, 2, 2, "file classifica.txt manomesso");
-        }
-        file.close();
-    }
-    wrefresh(win);
-    wgetch(win);
-    mainMenu();
-}
-
-void mainMenu :: ricava_nome_punti(char linea[], char punti[], char nome[]){
-    int x = 0;
-    if(linea[0] != '\0') {
-        while (linea[x] != ';') {
-            punti[x] = linea[x];
-            x++;
-        }
-        punti[x] = '\0';
-
-        int y = 0;
-        while (linea[x + y + 1] != ';' && y < 20) {
-            nome[y] = linea[x + y + 1];
-            y++;
-        }
-        nome[y] = '\0';
-    }
-    else {
-        nome[0] = '\0';
-        punti[0] = '\0';
-    }
-}
-
-bool mainMenu :: controllo_file(){
-    fstream file;
-    file.open("classifica.txt", ios::in);
-
-    char linea[32];
-    while(!file.eof()) {
-        file.getline(linea, 32);
-        if (linea[0] != '\0') {
-            int len = strlen(linea);
-            if (len > 26) return false;
-            //controlla che il punteggio non sia troppo lungo e che ci siano solo cifre
-            int x = 0;
-            while (linea[x] != ';' ){
-                if (linea[x] == '\0') return false;
-                if (x >= 9) return false;
-                if (linea[x] < '0' || linea[x] > '9') return false;
-                x++;
-            }
-            // controlla che il nome non sia troppo lungo
-            int y = 1;
-            while (linea[x + y] != ';'){
-                if (linea[x + y] == '\0') return false;
-                if (y > 15) return false;
-                y++;
-            }
-        }
-    }
-    file.close();
-    return true;
-}*/

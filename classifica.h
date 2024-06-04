@@ -27,14 +27,15 @@ private:
     nodo* inserisci_coda(nodo* testa, int punti, char nome[]);
     nodo* crea_lista_punteggi();
     nodo* aggiungi_nodo(nodo *testa, char nome[], int punti);
+    void dealloca_lista(nodo* testa);
     void riscrivi_classifica(nodo *testa);
+    bool stampa_facciata(WINDOW* win, int indice_partenza, int yMax, nodo *testa);
 
 public:
     //Classifica();
     void finestra_classifica();
     void aggiungi_punteggio(char nome[], int punteggio);
     void richiesta_nome(char input[]);
-    bool stampa_facciata(WINDOW* win, int indice_partenza, int yMax);
 };
 
 #endif

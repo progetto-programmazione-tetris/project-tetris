@@ -12,7 +12,7 @@ void Gioco::disegna(){
     tetramino.aggiornaTavola();         // Aggiorna lo stato del tetramino attivo
     WINDOW *campo = newwin(22, 22, 1, 50);         // Crea una nuova finestra per il campo di gioco
     start_color(); // Inizializza i colori
-    wborder(campo, int('|'), int('|'), int('='), int('='), int('='), int('='), int('='), int('='));         // Disegna il bordo della finestra
+    wborder(campo, int('|'), int('|'), int('='), int('='),  int('='), int('='), int('='), int('='));
     // Disegna i tetramini e lo sfondo
     for(int y=0; y<20; y++){
         for(int x = 0; x < 10; x++){
@@ -25,17 +25,30 @@ void Gioco::disegna(){
     wrefresh(campo);
     // Finestra punteggio
     mvprintw(5, 5, "punteggio: %d", punteggio);
+
+    // Finestra prossimo tetramino
+    mvprintw(6, 5, "prossimo tetramino: ");
+    WINDOW* next = newwin(5, 13, 7, 5);
+    for (int i = 1; i < 5; ++i) {
+        for (int j = 3; j < 7; ++j) {
+            Disegno = prossimoTetramino.tavola[i][j];
+            wattron(next, COLOR_PAIR(Disegno));
+            mvwprintw(next, i + 1, (j - 1) * 2, "  ");
+            wattroff(next, COLOR_PAIR(Disegno));
+        }
+    }
+    wrefresh(next);
 }
 
 void Gioco::cancellaRiga(int y){
-    // Sposta tutte le righe sopra di una posizione verso il basso
+// Sposta tutte le righe sopra di una posizione verso il basso
     while (y > 0) {
         for (int x = 0; x < 10; x++) {
             tavola[y][x] = tavola[y - 1][x];
         }
         y--;
     }
-    // Pulisce la prima riga
+        // Pulisce la prima riga
     for (int x = 0; x < 10; x++) {
         tavola[0][x] = 0;
     }
@@ -63,7 +76,11 @@ void Gioco::rimozioneRighePiene(){
             cancellaRiga(y);
         }
     }
-    punteggio = punteggio + (righe_piene*100);
+    punteggio = punteggio + (righe_piene * 100);
+    if(righe_piene > 1){
+        punteggio = punteggio + righe_piene - 1 * 20;
+    }
+    
 }
 
 // Aggiorna lo stato del gioco in base alla posizione del tetramino
@@ -83,8 +100,8 @@ void Gioco::aggiornaStato(){
                 }
             }
         }
-        rimozioneRighePiene();     // Rimuove le righe complete
-        tetramino = prossimoTetramino;     // Sostituisce il tetramino attuale con il prossimo
+        rimozioneRighePiene();
+         tetramino = prossimoTetramino;     // Sostituisce il tetramino attuale con il prossimo
         prossimoTetramino = Tetramino();     // Genera un nuovo tetramino
     }
 }
@@ -106,11 +123,19 @@ bool Gioco::collisioniConTetramini() {
 bool Gioco::sconfitta(){
     tetramino.aggiornaTavola();
     for (int j = 0; j < 10; ++j) {
-        if (tavola[19][j] != 0 && tetramino.tavola[3][j] != 0) {
+        if ((tavola[0][j] != 0) && (tetramino.tavola[3][j] != 0)) {
             return true; 
         }
     }
     return false;
+}
+
+void Gioco::gameOver(){
+    clear();
+    refresh();
+    mvprintw(LINES / 2, (COLS - 9) / 2, "GAME OVER");
+    refresh();
+    getch();
 }
 void Gioco::gravita(){
     tetramino.giu();
@@ -134,10 +159,6 @@ void Gioco::trasformaTetramino(int k){
         case KEY_LEFT:
             tetramino.sinistra();
             if (collisioniConTetramini()) tetramino.destra();
-            break;
-        case KEY_DOWN:
-            tetramino.ruota(true);
-            if (collisioniConTetramini()) tetramino.ruota(false);
             break;
     }
 }

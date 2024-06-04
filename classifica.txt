@@ -1,3 +1,5 @@
+564;paim;
+400;?;
 100;maria;
 100;maria;
 100;maria;
@@ -28,3 +30,5 @@
 20;lucia;
 20;lucia;
 10;marco;
+0;bho;
+0;?;
