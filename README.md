@@ -6,8 +6,19 @@ Questa relazione presenta la realizzazione di un clone del gioco Tetris utilizza
 
 ## Installation
 
-Dopo aver scaricato ed estratto la cartella zip da github recati tramite terminale all'interno della cartella estratta e utilizza il comando " make " per compilare il codice e poi digita " ./tetris " per avviare il gioco.
+Come far partire il gioco Tetris
+1. Scaricare il codice:
 
+Scarica il file ZIP del progetto Tetris da GitHub.
+Estrai il contenuto del file ZIP in una cartella sul tuo computer.
+2. Compilare il codice:
+
+Apri una finestra del terminale.
+Vai alla cartella dove hai estratto il codice Tetris usando il comando cd.
+Esegui il comando make per compilare il codice.
+3. Avviare il gioco:
+
+Una volta compilato il codice, esegui il comando ./tetris per avviare il gioco.
 ## Comandi di gioco
 Navigazione nel menu:
 
