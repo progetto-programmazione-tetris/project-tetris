@@ -12,6 +12,7 @@ Dopo aver scaricato ed estratto la cartella zip da github recati tramite termina
 Navigazione nel menu:
 
 -Usa i tasti freccia SU, GIÙ per spostarti all'interno del menu.
+
 -Premi il tasto ENTER per selezionare un'opzione.
 
 Controllo dei tetramini:
