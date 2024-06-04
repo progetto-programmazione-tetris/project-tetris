@@ -16,6 +16,6 @@ Navigazione nel menu:
 
 Controllo dei tetramini:
 
--Usa i tasti freccia DESTRA e SINISTRA per spostare i tetramini lateralmente.
--Usa il tasto freccia SU per ruotare i tetramini in senso orario.
--Premi il tasto GIÙ per far scendere i tetramini più velocemente.
+-Usa i tasti freccia DESTRA e SINISTRA per spostare i tetramini lateralmente.                                                 
+-Usa il tasto freccia SU per ruotare i tetramini in senso orario.                                                                        
+-Premi il tasto GIÙ per far scendere i tetramini più velocemente.                                                                 
