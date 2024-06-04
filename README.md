@@ -8,6 +8,14 @@ Questa relazione presenta la realizzazione di un clone del gioco Tetris utilizza
 
 Dopo aver scaricato ed estratto la cartella zip da github recati tramite terminale all'interno della cartella estratta e utilizza il comando " make " per compilare il codice e poi digita " ./tetris " per avviare il gioco.
 
-## Usage
+## Comandi di gioco
+Navigazione nel menu:
 
-Step-by-step guide on how to run and utilize the project.
+-Usa i tasti freccia SU, GIÙ per spostarti all'interno del menu.
+-Premi il tasto ENTER per selezionare un'opzione.
+
+Controllo dei tetramini:
+
+-Usa i tasti freccia DESTRA e SINISTRA per spostare i tetramini lateralmente.
+-Usa il tasto freccia SU per ruotare i tetramini in senso orario.
+-Premi il tasto GIÙ per far scendere i tetramini più velocemente.
