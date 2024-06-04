@@ -9,8 +9,8 @@ Questa relazione presenta la realizzazione di un clone del gioco Tetris utilizza
 Come far partire il gioco Tetris
 1. Scaricare il codice:
 
-Scarica il file ZIP del progetto Tetris da GitHub.
-Estrai il contenuto del file ZIP in una cartella sul tuo computer.
+-Scarica il file ZIP del progetto Tetris da GitHub.                                                  
+-Estrai il contenuto del file ZIP in una cartella sul tuo computer.                                        
 2. Compilare il codice:
 
 Apri una finestra del terminale.
