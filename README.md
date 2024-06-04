@@ -6,7 +6,7 @@ Questa relazione presenta la realizzazione di un clone del gioco Tetris utilizza
 
 ## Installation
 
-Detailed instructions on how to install and set up the project.
+Dopo aver scaricato ed estratto la cartella zip da github recati tramite terminale all'interno della cartella estratta e utilizza il comando " make " per compilare il codice e poi digita " ./tetris " per avviare il gioco.
 
 ## Usage
 
