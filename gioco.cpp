@@ -78,7 +78,7 @@ void Gioco::rimozioneRighePiene(){
     }
     punteggio = punteggio + (righe_piene * 100);
     if(righe_piene > 1){
-        punteggio = punteggio + righe_piene - 1 * 20;
+        punteggio = punteggio + ((righe_piene - 1) * 20);
     }
     
 }
